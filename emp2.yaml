@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emp-webapp2
+  labels:
+    app: myapp2
+
+spec:
+  template:
+    metadata:
+      name: emp-pod2
+      labels:
+        app: myapp2
+    spec:
+      containers:
+        - name: emp-cont2
+          image: puneetsingh1/employee-img:2
+          # command: ["python", "employee_server.py"]
+          imagePullPolicy: Never ###
+          ports:
+            - containerPort: 8080
+
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp2
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: emp-svc2
+
+spec:
+  type: NodePort
+  ports:
+    - targetPort: 8080
+      protocol: TCP
+      port: 8080
+      nodePort: 32569
+      # name: http
+  selector:
+    app: myapp2 ## from label
+    

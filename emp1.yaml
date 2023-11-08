@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emp-webapp1
+  labels:
+    app: myapp1
+
+spec:
+  template:
+    metadata:
+      name: emp-pod1
+      labels:
+        app: myapp1
+    spec:
+      containers:
+        - name: emp-cont1
+          image: puneetsingh1/employee-img:1
+          # command: ["python", "employee_server.py"]
+          imagePullPolicy: Never ###
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: employee-data
+              mountPath: /app/data
+      volumes:
+        - name: employee-data
+          hostPath:
+            path: /var/data
+
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapp1
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: emp-svc1
+
+spec:
+  type: NodePort ## ClusterIP is default type, if don't specify it
+  ports: ##(array)
+    - targetPort: 8080 ## if you don't provide this, it is assumed to be same as 'port'
+      protocol: TCP
+      port: 8080 ## only mandatory
+      nodePort: 32567 ## if you don't provide this, a free port is automaticalyy allocated between the range of 30000-32767
+      # name: http ## we can assign a name to the port as well (port naming)
+  selector: ## imp as it connects to port of which pod.
+    app: myapp1 ## from label
+
