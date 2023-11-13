@@ -1,0 +1,36 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: employee-ingress
+
+spec:
+  rules:
+    - host: myorg.com # domain name
+      http:
+        paths:
+          - path: /empinfo
+            pathType: Prefix
+            backend:
+              service:
+                name: emp-svc1 # Name of Kubernetes Service
+                port:
+                  number: 80 # Port where service is running
+
+          - path: /inventory
+            pathType: Prefix
+            backend:
+              service:
+                name: emp-svc2 # Name of Kubernetes Service
+                port:
+                  number: 80 # Port where service is running
+
+                  
+          - path: /submit
+            pathType: Prefix
+            backend:
+              service:
+                name: emp-svc1 # Name of Kubernetes Service
+                port:
+                  number: 80 # Port where service is running
+

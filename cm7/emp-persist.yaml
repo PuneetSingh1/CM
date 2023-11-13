@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: emp-pv
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /data/empdata
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: emp-pvc
+spec:
+  storageClassName: manual
+  # volumeName: emp-pv
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
