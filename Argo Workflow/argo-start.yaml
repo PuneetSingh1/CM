@@ -1,0 +1,124 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: start-app-
+spec:
+  entrypoint: deploy-app
+  templates:
+  - name: deploy-app
+    steps:
+    - - name: deploy
+        template: deploy-app-template
+    - - name: service
+        template: create-service
+    - - name: ingress
+        template: create-ingress
+        
+  - name: deploy-app-template
+    resource:
+      action: apply
+      manifest: |
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: emp-webapp1
+          labels:
+            app: myapp1
+
+        spec:
+          template:
+            metadata:
+              name: emp-pod1
+              labels:
+                app: myapp1
+            spec:
+              containers:
+                - name: emp-cont1
+                  image: puneetsingh1/employee-img:4
+                  imagePullPolicy: Never ###
+                  ports:
+                    - containerPort: 8080 ## should be same as whatever port you exposed in dockerfile
+                  volumeMounts:
+                    - name: employee-data
+                      mountPath: /app/data
+              volumes:
+                - name: employee-data
+                  hostPath:
+                    path: /data/empdata ## data would be persisted even without pvc
+
+          replicas: 1
+          selector:
+            matchLabels:
+              app: myapp1
+
+  - name: create-service
+    resource:
+      action: apply
+      manifest: |
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: emp-svc1
+        spec:
+          type: NodePort
+          ports:
+            - targetPort: 8080
+              protocol: TCP
+              port: 80
+              nodePort: 32567
+          selector:
+            app: myapp1
+
+  - name: create-ingress
+    resource: 
+      action: apply
+      manifest: |
+        
+        apiVersion: networking.k8s.io/v1
+        kind: Ingress
+        metadata:
+          name: employee-ingress
+
+        spec:
+          rules:
+            - host: myorg.com # domain name
+              http:
+                paths:
+                  - path: /
+                    pathType: Prefix
+                    backend:
+                      service:
+                        name: emp-svc1 
+                        port:
+                          number: 80 
+
+                  - path: /empinfo
+                    pathType: Prefix
+                    backend:
+                      service:
+                        name: emp-svc1 
+                        port:
+                          number: 80 
+
+                  - path: /inventory
+                    pathType: Prefix
+                    backend:
+
+                      service:
+                        name: emp-svc2 
+                        port:
+                          number: 80 
+
+                  - path: /submit
+                    pathType: Prefix
+                    backend:
+                      service:
+                        name: emp-svc1 
+                        port:
+                          number: 80 
+
+
+            
+
+              
+      

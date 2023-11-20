@@ -1,0 +1,25 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: argo
+  name: workflow-deployer
+rules:
+- apiGroups: ["apps","","networking.k8s.io"]
+  resources: ["deployments","services","ingresses"]
+  verbs: ["create","apply","get", "list", "watch","patch","delete"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: workflow-deployer-binding
+  namespace: argo
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: argo
+roleRef:
+  kind: Role
+  name: workflow-deployer
+  apiGroup: rbac.authorization.k8s.io

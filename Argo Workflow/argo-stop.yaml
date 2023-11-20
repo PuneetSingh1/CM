@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: stop-app-
+spec:
+  entrypoint: stop-app
+  templates:  
+    - name: stop-app
+      steps:
+        - - name: stop-deploy
+            template: stop-app-template
+          - name: stop-service
+            template: stop-service
+          - name: stop-ingress
+            template: stop-ingress
+
+    - name: stop-app-template
+      resource:
+        action: delete
+        manifest: |
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: emp-webapp1
+            labels:
+              app: myapp1
+
+    - name: stop-service
+      resource:
+        action: delete
+        manifest: |
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: emp-svc1
+            labels:
+              app: myapp1
+
+    - name: stop-ingress
+      resource:
+        action: delete
+        manifest: |
+          apiVersion: networking.k8s.io/v1
+          kind: Ingress
+          metadata:
+            name: employee-ingress
+            labels:
+              app: myapp1
+
