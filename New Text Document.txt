@@ -1,0 +1,7 @@
+I am Puneet Singh, currently in my final year of BTech in Computer Science and Engineering at KIIT Bhubaneswar. Originally from Varanasi, U.P., I have acquired knowledge and expertise in various areas of computer science throughout my academic journey. This includes proficiency in programming languages, algorithms, data structures, data analysis, machine learning, and cloud computing.
+
+In addition to my academic pursuits, I actively engage in extracurricular activities related to computer science. I have participated in hackathons and various competitive coding competitions to enhance my problem-solving skills and collaboration abilities.
+
+During an internship with a fintech company, I developed a full-stack web application using React, integrated a machine learning model for order amount prediction using Flask, and managed a MySQL database. In my pre-internship training at CME, under the guidance of Amith Mahadevappa Sir, I gained basic knowledge about Docker, Kubernetes, Ingress, and Argo Workflow.
+
+My hobbies include traveling, cooking, and currently delving into personal finance and investing.
